@@ -1,5 +1,10 @@
 
 # UPA Project: Breast Cancer Wisconsin Diagnostic
+## 📋 Project Demo
+
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 
 ## 📋 Overview
 This project implements the **Unsupervised Prediction Alignment (UPA)** algorithm based on the research paper published in *Nature Communications (2023)*. The algorithm automatically corrects performance drift caused by acquisition shifts in medical image classification without requiring new labeled data.
