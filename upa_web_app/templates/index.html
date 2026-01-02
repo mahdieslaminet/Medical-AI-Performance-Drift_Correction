@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPA System - Breast Cancer Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <i class="fas fa-brain"></i> UPA System
+            </a>
+            <div class="nav-links">
+                <a href="/" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="/results"><i class="fas fa-chart-bar"></i> Results</a>
+                <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Unsupervised Prediction Alignment</h1>
+                <h2>Breast Cancer Performance Drift Correction</h2>
+                <p class="description">
+                    An AI-powered system for automatic correction of performance drift
+                    in medical image classification under acquisition shift.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <i class="fas fa-database"></i>
+                        <h3>569</h3>
+                        <p>Medical Samples</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-cogs"></i>
+                        <h3>30</h3>
+                        <p>Image Features</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>95%</h3>
+                        <p>Average Accuracy</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>UPA</h3>
+                        <p>Drift Correction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container main-container">
+        <!-- System Control Panel -->
+        <div class="card control-panel">
+            <h2><i class="fas fa-sliders-h"></i> System Control Panel</h2>
+
+            <div class="control-section">
+                <h3>1. Initialize System</h3>
+                <p>Load dataset and train the model</p>
+                <button onclick="initializeSystem()" class="btn btn-primary">
+                    <i class="fas fa-play-circle"></i> Initialize System
+                </button>
+                <div id="initStatus" class="status"></div>
+            </div>
+
+            <div class="control-section">
+                <h3>2. Run UPA Experiment</h3>
+                <p>Simulate acquisition shift and correction</p>
+                <div class="form-group">
+                    <label for="shiftSeverity">Shift Severity:</label>
+                    <input type="range" id="shiftSeverity" min="0.1" max="0.8" step="0.1" value="0.4">
+                    <span id="severityValue">0.4</span>
+                </div>
+                <button onclick="runExperiment()" class="btn btn-success">
+                    <i class="fas fa-flask"></i> Run Experiment
+                </button>
+                <div id="experimentStatus" class="status"></div>
+            </div>
+        </div>
+
+        <!-- Prediction Panel -->
+        <div class="card prediction-panel">
+            <h2><i class="fas fa-stethoscope"></i> Single Sample Prediction</h2>
+
+            <div class="form-group">
+                <label>Enter feature values or use sample:</label>
+                <div class="sample-buttons">
+                    <button onclick="loadSample('benign')" class="btn btn-sample">
+                        <i class="fas fa-heartbeat"></i> Benign Sample
+                    </button>
+                    <button onclick="loadSample('malignant')" class="btn btn-sample">
+                        <i class="fas fa-virus"></i> Malignant Sample
+                    </button>
+                    <button onclick="loadRandomSample()" class="btn btn-sample">
+                        <i class="fas fa-random"></i> Random Sample
+                    </button>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <!-- Features 1-10 -->
+                <div class="feature-group">
+                    <h4>Mean Features</h4>
+                    <div id="features1-10"></div>
+                </div>
+
+                <!-- Features 11-20 -->
+                <div class="feature-group">
+                    <h4>Standard Error Features</h4>
+                    <div id="features11-20"></div>
+                </div>
+
+                <!-- Features 21-30 -->
+                <div class="feature-group">
+                    <h4>Worst Features</h4>
+                    <div id="features21-30"></div>
+                </div>
+            </div>
+
+            <button onclick="predict()" class="btn btn-predict">
+                <i class="fas fa-brain"></i> Predict Diagnosis
+            </button>
+
+            <div id="predictionResult" class="result-box"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card quick-actions">
+            <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+            <div class="action-buttons">
+                <button onclick="uploadDataset()" class="btn-action">
+                    <i class="fas fa-upload"></i> Upload Dataset
+                </button>
+                <button onclick="viewResults()" class="btn-action">
+                    <i class="fas fa-chart-bar"></i> View Results
+                </button>
+                <button onclick="downloadReport()" class="btn-action">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+                <button onclick="resetSystem()" class="btn-action">
+                    <i class="fas fa-redo"></i> Reset System
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Dashboard -->
+        <div class="card dashboard">
+            <h2><i class="fas fa-tachometer-alt"></i> Live Dashboard</h2>
+            <div class="dashboard-content">
+                <div class="metric">
+                    <div class="metric-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Model Status</h3>
+                        <p id="modelStatus">Not Initialized</p>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Last Update</h3>
+                        <p id="lastUpdate">Never</p>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>UPA Active</h3>
+                        <p id="upaStatus">Inactive</p>
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Performance</h3>
+                        <p id="performanceScore">0%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>UPA System - Breast Cancer Wisconsin Diagnostic Analysis</p>
+            <p>Based on Nature Communications (2023) 14:6608</p>
+            <div class="footer-links">
+                <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+                <a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="mailto:contact@example.com"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Initialize feature inputs
+        function initializeFeatureInputs() {
+            const features = [
+                'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean',
+                'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean',
+                'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se',
+                'compactness_se', 'concavity_se', 'concave_points_se', 'symmetry_se', 'fractal_dimension_se',
+                'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst',
+                'compactness_worst', 'concavity_worst', 'concave_points_worst', 'symmetry_worst', 'fractal_dimension_worst'
+            ];
+
+            let html1 = '', html2 = '', html3 = '';
+
+            features.forEach((feature, index) => {
+                const input = `
+                    <div class="feature-input">
+                        <label>${feature}:</label>
+                        <input type="number" step="0.01" id="${feature}" class="feature-value"
+                               placeholder="0.00" value="${(Math.random() * 20 + 10).toFixed(2)}">
+                    </div>
+                `;
+
+                if (index < 10) html1 += input;
+                else if (index < 20) html2 += input;
+                else html3 += input;
+            });
+
+            $('#features1-10').html(html1);
+            $('#features11-20').html(html2);
+            $('#features21-30').html(html3);
+        }
+
+        // Load sample data
+        function loadSample(type) {
+            let sampleValues = [];
+
+            if (type === 'benign') {
+                // Sample benign values
+                sampleValues = [
+                    12.5, 18.2, 80.5, 480.2, 0.095, 0.085, 0.035, 0.020, 0.165, 0.065,
+                    0.45, 1.25, 3.15, 42.5, 0.007, 0.025, 0.015, 0.008, 0.025, 0.003,
+                    13.8, 24.5, 88.5, 550.8, 0.125, 0.185, 0.095, 0.055, 0.255, 0.085
+                ];
+                showNotification('Loaded benign sample data', 'success');
+            } else if (type === 'malignant') {
+                // Sample malignant values
+                sampleValues = [
+                    18.5, 21.8, 120.5, 980.2, 0.125, 0.185, 0.195, 0.095, 0.215, 0.085,
+                    0.85, 1.85, 5.85, 85.5, 0.015, 0.055, 0.045, 0.025, 0.045, 0.008,
+                    22.5, 30.5, 145.5, 1450.8, 0.185, 0.385, 0.425, 0.195, 0.355, 0.125
+                ];
+                showNotification('Loaded malignant sample data', 'success');
+            }
+
+            // Update inputs
+            const features = [
+                'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean',
+                'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean',
+                'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se',
+                'compactness_se', 'concavity_se', 'concave_points_se', 'symmetry_se', 'fractal_dimension_se',
+                'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst',
+                'compactness_worst', 'concavity_worst', 'concave_points_worst', 'symmetry_worst', 'fractal_dimension_worst'
+            ];
+
+            features.forEach((feature, index) => {
+                $(`#${feature}`).val(sampleValues[index].toFixed(2));
+            });
+        }
+
+        function loadRandomSample() {
+            const features = [
+                'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean',
+                'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean',
+                'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se',
+                'compactness_se', 'concavity_se', 'concave_points_se', 'symmetry_se', 'fractal_dimension_se',
+                'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst',
+                'compactness_worst', 'concavity_worst', 'concave_points_worst', 'symmetry_worst', 'fractal_dimension_worst'
+            ];
+
+            features.forEach(feature => {
+                let value;
+                if (feature.includes('mean')) {
+                    value = Math.random() * 15 + 10;
+                } else if (feature.includes('se')) {
+                    value = Math.random() * 2 + 0.5;
+                } else if (feature.includes('worst')) {
+                    value = Math.random() * 20 + 15;
+                } else {
+                    value = Math.random();
+                }
+                $(`#${feature}`).val(value.toFixed(2));
+            });
+
+            showNotification('Loaded random sample data', 'info');
+        }
+
+        // Initialize system
+        function initializeSystem() {
+            showStatus('initStatus', 'Initializing system...', 'loading');
+
+            $.ajax({
+                url: '/api/initialize',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({}),
+                success: function(response) {
+                    if (response.success) {
+                        showStatus('initStatus', 'System initialized successfully!', 'success');
+                        $('#modelStatus').text('Ready');
+                        $('#lastUpdate').text(new Date().toLocaleString());
+                        showNotification('System ready for predictions', 'success');
+                    } else {
+                        showStatus('initStatus', 'Initialization failed', 'error');
+                    }
+                },
+                error: function(xhr) {
+                    showStatus('initStatus', 'Error: ' + (xhr.responseJSON?.error || 'Unknown error'), 'error');
+                }
+            });
+        }
+
+        // Run experiment
+        function runExperiment() {
+            const severity = $('#shiftSeverity').val();
+            showStatus('experimentStatus', 'Running experiment...', 'loading');
+
+            $.ajax({
+                url: '/api/run_experiment',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ shift_severity: parseFloat(severity) }),
+                success: function(response) {
+                    if (response.error) {
+                        showStatus('experimentStatus', 'Error: ' + response.error, 'error');
+                        return;
+                    }
+
+                    showStatus('experimentStatus', 'Experiment completed!', 'success');
+                    $('#upaStatus').text('Active');
+                    $('#performanceScore').text(Math.round(response.corrected.accuracy * 100) + '%');
+
+                    // Store results in localStorage for results page
+                    localStorage.setItem('upaResults', JSON.stringify(response));
+                    localStorage.setItem('upaResultsTime', new Date().toLocaleString());
+
+                    showNotification('Experiment completed. View results on Results page.', 'success');
+                },
+                error: function(xhr) {
+                    showStatus('experimentStatus', 'Error: ' + (xhr.responseJSON?.error || 'Unknown error'), 'error');
+                }
+            });
+        }
+
+        // Make prediction
+        function predict() {
+            // Collect feature values
+            const features = [
+                'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean',
+                'compactness_mean', 'concavity_mean', 'concave_points_mean', 'symmetry_mean', 'fractal_dimension_mean',
+                'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se',
+                'compactness_se', 'concavity_se', 'concave_points_se', 'symmetry_se', 'fractal_dimension_se',
+                'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst',
+                'compactness_worst', 'concavity_worst', 'concave_points_worst', 'symmetry_worst', 'fractal_dimension_worst'
+            ];
+
+            const featureValues = features.map(feature => parseFloat($(`#${feature}`).val()) || 0);
+
+            // Show loading
+            $('#predictionResult').html(`
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Analyzing features...
+                </div>
+            `);
+
+            // Send request
+            $.ajax({
+                url: '/api/predict',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ features: featureValues }),
+                success: function(response) {
+                    if (response.error) {
+                        $('#predictionResult').html(`
+                            <div class="result error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <h3>Error</h3>
+                                <p>${response.error}</p>
+                            </div>
+                        `);
+                        return;
+                    }
+
+                    const isMalignant = response.diagnosis === 'Malignant';
+                    const confidenceClass = response.confidence === 'High' ? 'high' : 'medium';
+
+                    $('#predictionResult').html(`
+                        <div class="result ${isMalignant ? 'malignant' : 'benign'}">
+                            <div class="result-header">
+                                <i class="fas fa-${isMalignant ? 'virus' : 'heartbeat'}"></i>
+                                <h3>${response.diagnosis}</h3>
+                                <span class="confidence ${confidenceClass}">${response.confidence} Confidence</span>
+                            </div>
+                            <div class="result-details">
+                                <p><strong>Probability:</strong> ${(response.probability * 100).toFixed(2)}%</p>
+                                <p><strong>Prediction:</strong> ${response.prediction === 1 ? 'Malignant (1)' : 'Benign (0)'}</p>
+                                <p><strong>Time:</strong> ${response.timestamp}</p>
+                            </div>
+                            <div class="result-advice">
+                                <p>${isMalignant ?
+                                    '⚠️ Further medical examination recommended.' :
+                                    '✓ Likely benign. Regular screening advised.'}</p>
+                            </div>
+                        </div>
+                    `);
+
+                    $('#lastUpdate').text(new Date().toLocaleString());
+                    showNotification('Prediction completed', 'success');
+                },
+                error: function(xhr) {
+                    $('#predictionResult').html(`
+                        <div class="result error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h3>Prediction Failed</h3>
+                            <p>${xhr.responseJSON?.error || 'Server error occurred'}</p>
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        // Other functions
+        function uploadDataset() {
+            alert('Dataset upload feature would open file dialog');
+        }
+
+        function viewResults() {
+            window.location.href = '/results';
+        }
+
+        function downloadReport() {
+            alert('Report download would start');
+        }
+
+        function resetSystem() {
+            if (confirm('Are you sure you want to reset the system?')) {
+                location.reload();
+            }
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = $('#' + elementId);
+            element.removeClass('success error loading').addClass(type);
+            element.html(`
+                <i class="fas fa-${type === 'success' ? 'check-circle' :
+                                 type === 'error' ? 'times-circle' : 'spinner fa-spin'}"></i>
+                ${message}
+            `);
+        }
+
+        function showNotification(message, type) {
+            const notification = $(`
+                <div class="notification ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' :
+                                      type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                    ${message}
+                </div>
+            `);
+
+            $('body').append(notification);
+
+            setTimeout(() => {
+                notification.fadeOut(300, () => notification.remove());
+            }, 3000);
+        }
+
+        // Event listeners
+        $(document).ready(function() {
+            initializeFeatureInputs();
+
+            // Update severity value display
+            $('#shiftSeverity').on('input', function() {
+                $('#severityValue').text($(this).val());
+            });
+
+            // Get dataset info
+            $.get('/api/dataset_info', function(response) {
+                if (!response.error) {
+                    console.log('Dataset info:', response);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
