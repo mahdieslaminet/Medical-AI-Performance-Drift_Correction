@@ -92,21 +92,26 @@ ipykernel>=6.0.0
 
 ```
 upa_web_app/
-├── templates/
-│   ├── index.html         # صفحه اصلی
-│   ├── results.html       # صفحه نتایج
-│   └── about.html         # صفحه درباره
-├── static/
-│   ├── css/
-│   │   └── style.css      # استایل‌ها
-│   └── images/            # عکس‌ها
-├── models/
-│   └── upa_model.pkl      # مدل ذخیره شده
-├── uploads/
-├── app.py                 # کد اصلی Flask
-├── data.csv               # دیتاست
-└── requirements.txt       # نیازمندی‌ها
-├── upa_final.py               # Breast Cancer 
+   ├── templates/
+   │   ├── index.html         # صفحه اصلی
+   │   ├── results.html       # صفحه نتایج
+   │   └── about.html         # صفحه درباره
+   ├── static/
+   │   ├── css/
+   │   │   └── style.css      # استایل‌ها
+   │   └── images/            # عکس‌ها
+   ├── models/
+   │   └── upa_model.pkl      # مدل ذخیره شده
+   ├──  uploads/
+   ├── app.py                 # کد اصلی Flask
+   └── data.csv               # دیتاست
+web_images/
+   ├── Untitled01.png
+   ├── Untitled02.png
+   └── Untitled03.png
+├──README.md
+├── data.csv    
+├── requirements.txt       # نیازمندی‌ها
 ├── upa_results.png
 └── upa_notebook.ipynb
 ```
@@ -293,4 +298,5 @@ For questions, suggestions, or collaborations:
 
 **Project Status**: Completed - January 2026  
 **Last Updated**: January 2026  
+
 
